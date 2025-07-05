@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLogin } from "@privy-io/react-auth";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
+import { DollarSign } from "lucide-react";
 
 export default function CushionPage() {
   const { login } = useLogin({
@@ -61,6 +63,96 @@ export default function CushionPage() {
                     Your Performance
                   </TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="vault" className="mt-6">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <Card className="bg-white/5 border-white/10 rounded-2xl p-4 shadow-lg">
+                      <div className="space-y-1">
+                        <p className="text-sm text-white/60">
+                          Performance (APY)
+                        </p>
+                        <p
+                          className="text-xl font-semibold text-white"
+                          role="status"
+                        >
+                          0.19%
+                        </p>
+                      </div>
+                    </Card>
+                    <Card className="bg-white/5 border-white/10 rounded-2xl p-4 shadow-lg">
+                      <div className="space-y-1">
+                        <p className="text-sm text-white/60">TVL</p>
+                        <div className="flex items-center gap-1">
+                          <DollarSign className="w-4 h-4 text-blue-400" />
+                          <p
+                            className="text-xl font-semibold text-white"
+                            role="status"
+                          >
+                            42
+                          </p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Card className="bg-white/5 border-white/10 rounded-2xl p-4 shadow-lg">
+                      <div className="space-y-1">
+                        <p className="text-sm text-white/60">
+                          Protection floor
+                        </p>
+                        <p
+                          className="text-xl font-semibold text-white"
+                          role="status"
+                        >
+                          60%
+                        </p>
+                      </div>
+                    </Card>
+                    <Card className="bg-white/5 border-white/10 rounded-2xl p-4 shadow-lg">
+                      <div className="space-y-1">
+                        <p className="text-sm text-white/60">Rebalancing</p>
+                        <p
+                          className="text-xl font-semibold text-white"
+                          role="status"
+                        >
+                          1 Day
+                        </p>
+                      </div>
+                    </Card>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">
+                      Performance Breakdown
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 border-b border-white/10">
+                          <span className="text-white/70">
+                            Total Earnings (All)
+                          </span>
+                          <span className="font-medium" role="status">
+                            —
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 border-b border-white/10">
+                          <span className="text-white/70">
+                            Max Daily Drawdown
+                          </span>
+                          <span className="font-medium" role="status">
+                            —
+                          </span>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 border-b border-white/10">
+                          <span className="text-white/70">30D Volume</span>
+                          <span className="font-medium" role="status">
+                            —
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
               </Tabs>
             </div>
           </div>
