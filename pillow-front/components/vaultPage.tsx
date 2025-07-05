@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { useLogin } from "@privy-io/react-auth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
 
 export default function CushionPage() {
@@ -163,6 +165,7 @@ export default function CushionPage() {
             </div>
           </div>
 
+          {/* Deposit withdraw to put in ca component */}
           <div className="max-w-sm flex-shrink-0">
             <Card className="bg-white/5 border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
               {/* Deposit/Withdraw Toggle */}
@@ -189,6 +192,41 @@ export default function CushionPage() {
                 >
                   Withdraw
                 </button>
+              </div>
+
+              <p className="text-sm text-white/60">
+                Deposited funds are subject to a 2 hours redemption period.
+              </p>
+
+              <div className="space-y-2">
+                <Label htmlFor="amount" className="text-sm font-medium">
+                  Amount
+                </Label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                    <DollarSign className="w-4 h-4 text-blue-400" />
+                    <span className="text-sm text-white/50 font-medium">
+                      USDC
+                    </span>
+                  </div>
+                  <Input
+                    id="amount"
+                    type="text"
+                    placeholder="0.0"
+                    className="bg-white/5 border-white/10 text-white rounded-xl h-12 pl-20 pr-4 text-right text-lg"
+                    aria-label="Enter amount in USDC"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-white/60">Balance</span>
+                <div className="flex items-center gap-1">
+                  <DollarSign className="w-3 h-3 text-blue-400" />
+                  <span role="status" className="text-white">
+                    0 → 0
+                  </span>
+                </div>
               </div>
             </Card>
           </div>
