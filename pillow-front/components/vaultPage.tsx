@@ -162,6 +162,36 @@ export default function CushionPage() {
               </Tabs>
             </div>
           </div>
+
+          <div className="max-w-sm flex-shrink-0">
+            <Card className="bg-white/5 border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
+              {/* Deposit/Withdraw Toggle */}
+              <div className="flex bg-white/5 rounded-2xl p-1">
+                <button
+                  onClick={() => setActiveAction("deposit")}
+                  className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ${
+                    activeAction === "deposit"
+                      ? "bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] text-white"
+                      : "text-white/70 hover:text-white"
+                  }`}
+                  aria-label="Switch to deposit mode"
+                >
+                  Deposit
+                </button>
+                <button
+                  onClick={() => setActiveAction("withdraw")}
+                  className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ${
+                    activeAction === "withdraw"
+                      ? "bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] text-white"
+                      : "text-white/70 hover:text-white"
+                  }`}
+                  aria-label="Switch to withdraw mode"
+                >
+                  Withdraw
+                </button>
+              </div>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
