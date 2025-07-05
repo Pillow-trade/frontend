@@ -153,6 +153,12 @@ export default function CushionPage() {
                     </div>
                   </div>
                 </TabsContent>
+
+                <TabsContent value="your" className="mt-6">
+                  <div className="text-center py-8 text-white/60">
+                    Connect your wallet to view your performance
+                  </div>
+                </TabsContent>
               </Tabs>
             </div>
           </div>
