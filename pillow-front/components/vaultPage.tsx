@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
 
-export default function CushionPage() {
+export default function PillowPage() {
   const { login } = useLogin({
     // onComplete: () => router.push("/vaultPage"),
   });
@@ -228,6 +228,14 @@ export default function CushionPage() {
                   </span>
                 </div>
               </div>
+
+              <Button
+                className="w-full bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] hover:from-[#2962FF]/90 hover:to-[#5C6BFF]/90 rounded-2xl h-12 text-base font-medium"
+                aria-label="Connect wallet to continue"
+                onClick={login}
+              >
+                Connect
+              </Button>
             </Card>
           </div>
         </div>
