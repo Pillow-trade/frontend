@@ -1,22 +1,14 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLogin } from "@privy-io/react-auth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import WithdrawDepositCard from "./withdrawDepositForm";
 
 export default function PillowPage() {
-  const { login } = useLogin({
-    // onComplete: () => router.push("/vaultPage"),
-  });
-  const [activeAction, setActiveAction] = useState<"deposit" | "withdraw">(
-    "deposit"
-  );
+  const { login } = useLogin({});
 
   return (
     <div className="min-h-screen bg-[#0F1116] text-white/90 font-['Inter']">
@@ -51,7 +43,7 @@ export default function PillowPage() {
                   ETH capital protected
                 </h2>
                 <p className="text-white/70 text-lg">
-                  60% capital guarantee and profit lock-in, invested in ETH and
+                  80% capital guarantee and profit lock-in, invested in ETH and
                   rebalancing to USDC
                 </p>
               </div>
@@ -111,7 +103,7 @@ export default function PillowPage() {
                           className="text-xl font-semibold text-white"
                           role="status"
                         >
-                          60%
+                          80%
                         </p>
                       </div>
                     </Card>
