@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLogin } from "@privy-io/react-auth";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function CushionPage() {
   const { login } = useLogin({
@@ -43,6 +44,24 @@ export default function CushionPage() {
                   rebalancing to USDC
                 </p>
               </div>
+              <Tabs defaultValue="vault" className="w-full">
+                <TabsList className="bg-white/5 border border-white/10 rounded-2xl p-1">
+                  <TabsTrigger
+                    value="vault"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2962FF] data-[state=active]:to-[#5C6BFF] data-[state=active]:text-white rounded-xl"
+                    aria-label="View vault performance"
+                  >
+                    Vault Performance
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="your"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2962FF] data-[state=active]:to-[#5C6BFF] data-[state=active]:text-white rounded-xl"
+                    aria-label="View your performance"
+                  >
+                    Your Performance
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
           </div>
         </div>
