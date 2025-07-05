@@ -6,19 +6,16 @@ import { DollarSign } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import WithdrawDepositCard from "./withdrawDepositForm";
+import WalletButton from "./walletButton";
 
 export default function PillowPage() {
   const { login } = useLogin({});
-  const { wallets } = useWallets(); // ⬅️ new
-  const { authenticated } = usePrivy(); // ⬅️ new
+  const { wallets } = useWallets();
+  const { authenticated } = usePrivy();
 
-  // ------------------------------------------------------------------ //
-  //   Connection status & button label
-  // ------------------------------------------------------------------ //
   const walletAddr = wallets?.find((w) => !!w.address)?.address;
   const isConnected = authenticated && !!walletAddr;
 
-  // e.g. 0x12…B3F4  (6 chars front, 4 back)
   const truncated = isConnected
     ? `${walletAddr!.slice(0, 6)}…${walletAddr!.slice(-4)}`
     : "Connect";
@@ -37,13 +34,15 @@ export default function PillowPage() {
             />
           </Link>
 
-          <Button
+          <WalletButton />
+
+          {/* <Button
             className="bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] hover:from-[#2962FF]/90 hover:to-[#5C6BFF]/90 rounded-xl h-10 px-6"
             aria-label={isConnected ? "Wallet connected" : "Connect wallet"}
-            onClick={login} // Re-opens Privy modal even when connected
+            onClick={login}
           >
             {truncated}
-          </Button>
+          </Button> */}
         </div>
       </nav>
       <div className="px-6 lg:px-8">
