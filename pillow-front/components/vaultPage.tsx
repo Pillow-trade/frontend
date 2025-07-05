@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useLogin } from "@privy-io/react-auth";
+import { useLogin, useWallets, usePrivy } from "@privy-io/react-auth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { DollarSign } from "lucide-react";
@@ -9,6 +9,19 @@ import WithdrawDepositCard from "./withdrawDepositForm";
 
 export default function PillowPage() {
   const { login } = useLogin({});
+  const { wallets } = useWallets(); // ⬅️ new
+  const { authenticated } = usePrivy(); // ⬅️ new
+
+  // ------------------------------------------------------------------ //
+  //   Connection status & button label
+  // ------------------------------------------------------------------ //
+  const walletAddr = wallets?.find((w) => !!w.address)?.address;
+  const isConnected = authenticated && !!walletAddr;
+
+  // e.g. 0x12…B3F4  (6 chars front, 4 back)
+  const truncated = isConnected
+    ? `${walletAddr!.slice(0, 6)}…${walletAddr!.slice(-4)}`
+    : "Connect";
 
   return (
     <div className="min-h-screen bg-[#0F1116] text-white/90 font-['Inter']">
@@ -26,10 +39,10 @@ export default function PillowPage() {
 
           <Button
             className="bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] hover:from-[#2962FF]/90 hover:to-[#5C6BFF]/90 rounded-xl h-10 px-6"
-            aria-label="Connect wallet"
-            onClick={login}
+            aria-label={isConnected ? "Wallet connected" : "Connect wallet"}
+            onClick={login} // Re-opens Privy modal even when connected
           >
-            Connect
+            {truncated}
           </Button>
         </div>
       </nav>
