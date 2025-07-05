@@ -29,6 +29,24 @@ export default function CushionPage() {
           Connect
         </Button>
       </nav>
+      <div className="px-6 lg:px-8">
+        <div className="flex flex-col xl:flex-row gap-16 xl:gap-24 max-w-7xl mx-auto">
+          {/* Left Column */}
+          <div className="max-w-lg flex-grow">
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-3xl font-bold mb-2">
+                  ETH capital protected
+                </h2>
+                <p className="text-white/70 text-lg">
+                  60% capital guarantee and profit lock-in, invested in ETH and
+                  rebalancing to USDC
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
