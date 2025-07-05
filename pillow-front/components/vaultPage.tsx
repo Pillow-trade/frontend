@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function PillowPage() {
   const { login } = useLogin({
@@ -17,22 +19,26 @@ export default function PillowPage() {
 
   return (
     <div className="min-h-screen bg-[#0F1116] text-white/90 font-['Inter']">
-      {/* Top Navbar */}
-      <nav className="flex items-center justify-between px-6 lg:px-8 pt-8 pb-8">
-        <div className="flex items-center gap-3">
-          {/* Pillow-shaped logo */}
-          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-            <div className="w-4 h-4 bg-[#0F1116] rounded-sm"></div>
-          </div>
-          <h1 className="text-lg font-bold">PILLOW</h1>
+      <nav className="bg-[#0F1116] pt-8 pb-8 px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link href="/" aria-label="Pillow Home" className="flex items-center">
+            <Image
+              src="/pillow.png"
+              width={280}
+              height={80}
+              priority
+              alt="Pillow logo"
+            />
+          </Link>
+
+          <Button
+            className="bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] hover:from-[#2962FF]/90 hover:to-[#5C6BFF]/90 rounded-xl h-10 px-6"
+            aria-label="Connect wallet"
+            onClick={login}
+          >
+            Connect
+          </Button>
         </div>
-        <Button
-          className="bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] hover:from-[#2962FF]/90 hover:to-[#5C6BFF]/90 rounded-xl h-10 px-6"
-          aria-label="Connect wallet"
-          onClick={login}
-        >
-          Connect
-        </Button>
       </nav>
       <div className="px-6 lg:px-8">
         <div className="flex flex-col xl:flex-row gap-16 xl:gap-24 max-w-7xl mx-auto">
@@ -199,7 +205,10 @@ export default function PillowPage() {
               </p>
 
               <div className="space-y-2">
-                <Label htmlFor="amount" className="text-sm font-medium">
+                <Label
+                  htmlFor="amount"
+                  className="text-sm font-medium text-white/50"
+                >
                   Amount
                 </Label>
                 <div className="relative">
