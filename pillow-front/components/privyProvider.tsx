@@ -6,7 +6,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <PrivyProvider
       appId="cmcpcp4o100wcjp0nwneosqii"
-      clientId="client-WY6N5NwdFH9oABSeCjm9DpiWaAp572AnQzJNZndNo7WXa"
+      //   clientId="client-WY6N5NwdFH9oABSeCjm9DpiWaAp572AnQzJNZndNo7WXa"
       config={{
         embeddedWallets: {
           ethereum: {
