@@ -1,30 +1,12 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
+import { useLogin, useWallets, usePrivy } from "@privy-io/react-auth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
-import { useLogin, useWallets } from "@privy-io/react-auth";
-import {
-    createWalletClient,
-    createPublicClient,
-    custom,
-    http,
-    formatUnits,
-    parseUnits,
-  } from "viem";
-  import { mainnet } from "viem/chains";
 
-export interface WithdrawDepositCardProps {
-  onConnect: () => void;
-
-  balanceDisplay?: string;
-}
-
-export default function WithdrawDepositCard({
-  onConnect,
-  balanceDisplay = "0 → 0",
-}: WithdrawDepositCardProps) {
+export default function WithdrawDepositCard() {
   const [activeAction, setActiveAction] = useState<"deposit" | "withdraw">(
     "deposit"
   );
@@ -32,45 +14,68 @@ export default function WithdrawDepositCard({
 
   const { login } = useLogin();
   const { wallets } = useWallets();
+  const { authenticated } = usePrivy();
 
-  const embeddedWallet = wallets.find((w) => w.walletClientType === "privy");
-  const ethProvider = embeddedWallet?.getEthereumProvider() as any;
+  // Connected = user has authenticated **and** at least one wallet has an address.
+  const isWalletConnected =
+    authenticated && (wallets?.some((w) => !!w.address) ?? false);
 
-  const walletClient = useMemo(() => {
-    if (!embeddedWallet) return null;
-    return createWalletClient({ chain: mainnet, transport: custom(ethProvider) });
-  }, [embeddedWallet, ethProvider]);
+  console.log("isWalletConnected:", isWalletConnected);
+  console.log("wallets:", wallets);
+  console.log("authenticated:", authenticated);
+  console.log("login:", login);
 
-  const publicClient = useMemo(() => createPublicClient({ chain: mainnet, transport: http() }), []);
+  const primaryLabel = isWalletConnected
+    ? activeAction === "deposit"
+      ? "Deposit"
+      : "Withdraw"
+    : "Connect";
 
-  const userAddress = embeddedWallet?.address as `0x${string}` | undefined;
-  const isWalletConnected = !!walletClient && !!userAddress;
+  const handlePrimaryClick = () => {
+    if (!isWalletConnected) {
+      login();
+      return;
+    }
+
+    console.log(`${primaryLabel} ${amount || "0.0"} USDC`);
+  };
 
   return (
     <div className="max-w-sm flex-shrink-0">
       <Card className="bg-white/5 border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
+        {/* Deposit/Withdraw Toggle */}
         <div className="flex bg-white/5 rounded-2xl p-1">
-          {(["deposit", "withdraw"] as const).map((action) => (
-            <button
-              key={action}
-              onClick={() => setActiveAction(action)}
-              className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ${
-                activeAction === action
-                  ? "bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] text-white"
-                  : "text-white/70 hover:text-white"
-              }`}
-              aria-label={`Switch to ${action} mode`}
-              type="button"
-            >
-              {action.charAt(0).toUpperCase() + action.slice(1)}
-            </button>
-          ))}
+          <button
+            onClick={() => setActiveAction("deposit")}
+            className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ${
+              activeAction === "deposit"
+                ? "bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] text-white"
+                : "text-white/70 hover:text-white"
+            }`}
+            aria-label="Switch to deposit mode"
+            type="button"
+          >
+            Deposit
+          </button>
+          <button
+            onClick={() => setActiveAction("withdraw")}
+            className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ${
+              activeAction === "withdraw"
+                ? "bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] text-white"
+                : "text-white/70 hover:text-white"
+            }`}
+            aria-label="Switch to withdraw mode"
+            type="button"
+          >
+            Withdraw
+          </button>
         </div>
 
         <p className="text-sm text-white/60">
           Deposited funds are subject to a 2&nbsp;hour redemption period.
         </p>
 
+        {/* Amount Input */}
         <div className="space-y-2">
           <Label htmlFor="amount" className="text-sm font-medium text-white/50">
             Amount
@@ -98,17 +103,16 @@ export default function WithdrawDepositCard({
           <div className="flex items-center gap-1">
             <DollarSign className="w-3 h-3 text-blue-400" />
             <span role="status" className="text-white">
-              {balanceDisplay}
+              0 → 0
             </span>
           </div>
         </div>
 
         <Button
           className="w-full bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] hover:from-[#2962FF]/90 hover:to-[#5C6BFF]/90 rounded-2xl h-12 text-base font-medium"
-          aria-label="Connect wallet to continue"
-          onClick={onConnect}
+          onClick={handlePrimaryClick}
         >
-          Connect
+          {primaryLabel}
         </Button>
       </Card>
     </div>
