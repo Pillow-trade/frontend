@@ -43,7 +43,6 @@ export default function WithdrawDepositCard() {
   return (
     <div className="max-w-sm flex-shrink-0">
       <Card className="bg-white/5 border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
-        {/* Deposit/Withdraw Toggle */}
         <div className="flex bg-white/5 rounded-2xl p-1">
           <button
             onClick={() => setActiveAction("deposit")}
@@ -71,11 +70,6 @@ export default function WithdrawDepositCard() {
           </button>
         </div>
 
-        <p className="text-sm text-white/60">
-          Deposited funds are subject to a 2&nbsp;hour redemption period.
-        </p>
-
-        {/* Amount Input */}
         <div className="space-y-2">
           <Label htmlFor="amount" className="text-sm font-medium text-white/50">
             Amount
