@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
+import { useLogin, useWallets } from "@privy-io/react-auth";
+import {
+    createWalletClient,
+    createPublicClient,
+    custom,
+    http,
+    formatUnits,
+    parseUnits,
+  } from "viem";
+  import { mainnet } from "viem/chains";
 
 export interface WithdrawDepositCardProps {
   onConnect: () => void;
@@ -19,6 +29,22 @@ export default function WithdrawDepositCard({
     "deposit"
   );
   const [amount, setAmount] = useState("");
+
+  const { login } = useLogin();
+  const { wallets } = useWallets();
+
+  const embeddedWallet = wallets.find((w) => w.walletClientType === "privy");
+  const ethProvider = embeddedWallet?.getEthereumProvider() as any;
+
+  const walletClient = useMemo(() => {
+    if (!embeddedWallet) return null;
+    return createWalletClient({ chain: mainnet, transport: custom(ethProvider) });
+  }, [embeddedWallet, ethProvider]);
+
+  const publicClient = useMemo(() => createPublicClient({ chain: mainnet, transport: http() }), []);
+
+  const userAddress = embeddedWallet?.address as `0x${string}` | undefined;
+  const isWalletConnected = !!walletClient && !!userAddress;
 
   return (
     <div className="max-w-sm flex-shrink-0">
