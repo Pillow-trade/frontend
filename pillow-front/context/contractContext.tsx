@@ -12,6 +12,8 @@ import { createWalletClient, custom, Hex, WalletClient } from "viem";
 // Replace `sepolia` with your desired network
 import { sepolia } from "viem/chains";
 import { useWallets } from "@privy-io/react-auth";
+import { abi } from "../abi/abi.json";
+import { createPublicClient, http, PublicClient } from "viem";
 
 // Define the shape of your context state
 interface ContractState {
@@ -74,11 +76,21 @@ interface ContractProviderProps {
   children: ReactNode;
 }
 
+export const getTotalAssets = async (publicClient: PublicClient) => {
+  const data = await publicClient.readContract({
+    address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
+    abi: abi,
+    functionName: "totalAssets",
+  });
+  return data;
+};
+
 export const ContractProvider: React.FC<ContractProviderProps> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(contractReducer, initialState);
   const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
+  const [publicClient, setPublicClient] = useState<PublicClient | null>(null);
 
   const { wallets } = useWallets();
   const wallet = wallets[0]; // Replace this with your desired wallet
@@ -90,6 +102,14 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({
       initWalletClient();
     }
   }, [wallet]);
+
+  const initPublicClient = async () => {
+    const publicClient = createPublicClient({
+      chain: sepolia,
+      transport: http(),
+    });
+    setPublicClient(publicClient);
+  };
 
   const initWalletClient = async () => {
     const provider = await wallet.getEthereumProvider();
