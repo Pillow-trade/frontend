@@ -7,12 +7,15 @@ import Link from "next/link";
 import Image from "next/image";
 import WithdrawDepositCard from "./withdrawDepositForm";
 import WalletButton from "./walletButton";
-import { useContract } from "@/context/contractContext";
+import { useContract, getTotalAssets } from "@/context/contractContext";
+import { useEffect, useState } from "react";
 
 export default function PillowPage() {
   const { login } = useLogin({});
   const { wallets } = useWallets();
   const { authenticated } = usePrivy();
+  const { publicClient, walletClient } = useContract();
+  const [totalAssets, setTotalAssets] = useState<number | null>(null);
 
   const walletAddr = wallets?.find((w) => !!w.address)?.address;
   const isConnected = authenticated && !!walletAddr;
@@ -20,6 +23,19 @@ export default function PillowPage() {
   const truncated = isConnected
     ? `${walletAddr!.slice(0, 6)}…${walletAddr!.slice(-4)}`
     : "Connect";
+
+  useEffect(() => {
+    const fetchTotalAssets = async () => {
+      console.log("PUBLIC CLIENT:", publicClient);
+      if (publicClient) {
+        console.log("GETTING TOTAL ASSETS");
+        const totalAssets = await getTotalAssets(publicClient);
+        console.log("TOTAL ASSET:", totalAssets);
+        setTotalAssets(totalAssets as number);
+      }
+    };
+    fetchTotalAssets();
+  }, [publicClient]);
 
   return (
     <div className="min-h-screen bg-[#0F1116] text-white/90 font-['Inter']">
@@ -102,7 +118,7 @@ export default function PillowPage() {
                             className="text-xl font-semibold text-white"
                             role="status"
                           >
-                            42
+                            {totalAssets?.toString()}
                           </p>
                         </div>
                       </div>

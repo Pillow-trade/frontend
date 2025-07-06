@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "@/components/privyProvider";
+import { ContractProvider } from "@/context/contractContext";
 
 export const metadata = {
   metadataBase: new URL("https://postgres-prisma.vercel.app"),
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <ContractProvider>{children} </ContractProvider>
+        </Providers>
       </body>
     </html>
   );

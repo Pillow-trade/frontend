@@ -80,7 +80,7 @@ interface ContractProviderProps {
 
 export const getTotalAssets = async (publicClient: PublicClient) => {
   const data = await publicClient.readContract({
-    address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
+    address: "0x77cac89DB6AEF2d28507b21153cE6268f6138Af8",
     abi: abi,
     functionName: "totalAssets",
   });
@@ -96,30 +96,39 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({
 
   const { wallets } = useWallets();
   const wallet = wallets[0]; // Replace this with your desired wallet
+  console.log("WALLET context:", wallet);
 
   // Switch chain when wallet is available
   React.useEffect(() => {
-    if (wallet) {
-      wallet.switchChain(sepolia.id);
-      initWalletClient();
-    }
+    const init = async () => {
+      if (wallet) {
+        wallet.switchChain(sepolia.id);
+        initWalletClient();
+        initPublicClient();
+      }
+    };
+    init();
   }, [wallet]);
 
   const initPublicClient = async () => {
+    console.log("INIT PUBLIC CLIENT");
     const publicClient = createPublicClient({
       chain: sepolia,
       transport: http(),
     });
+    console.log("PUBLIC CLIENT:", publicClient);
     setPublicClient(publicClient);
   };
 
   const initWalletClient = async () => {
     const provider = await wallet.getEthereumProvider();
+    console.log("PROVIDER:", provider);
     const walletClient = createWalletClient({
       account: wallet.address as Hex,
       chain: sepolia,
       transport: custom(provider),
     });
+    console.log("WALLET CLIENT:", walletClient);
     setWalletClient(walletClient);
   };
 
