@@ -1,6 +1,17 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
+import { createWalletClient, custom, Hex, WalletClient } from "viem";
+// Replace `sepolia` with your desired network
+import { sepolia } from "viem/chains";
+import { useWallets } from "@privy-io/react-auth";
 
 // Define the shape of your context state
 interface ContractState {
@@ -67,6 +78,28 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(contractReducer, initialState);
+  const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
+
+  const { wallets } = useWallets();
+  const wallet = wallets[0]; // Replace this with your desired wallet
+
+  // Switch chain when wallet is available
+  React.useEffect(() => {
+    if (wallet) {
+      wallet.switchChain(sepolia.id);
+      initWalletClient();
+    }
+  }, [wallet]);
+
+  const initWalletClient = async () => {
+    const provider = await wallet.getEthereumProvider();
+    const walletClient = createWalletClient({
+      account: wallet.address as Hex,
+      chain: sepolia,
+      transport: custom(provider),
+    });
+    setWalletClient(walletClient);
+  };
 
   // Custom methods
   const setLoading = (loading: boolean) => {
