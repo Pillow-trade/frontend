@@ -176,7 +176,7 @@ export default function PillowPage() {
             </div>
           </div>
 
-          <WithdrawDepositCard onConnect={login} />
+          <WithdrawDepositCard />
         </div>
       </div>
     </div>

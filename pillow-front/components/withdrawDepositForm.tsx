@@ -1,29 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLogin, useWallets, usePrivy } from "@privy-io/react-auth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
+import { ethers } from "ethers";
+
+const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238";
+const ERC20_ABI = [
+  "function balanceOf(address) view returns (uint256)",
+  "function decimals() view returns (uint8)",
+];
+const SEPOLIA_RPC = "https://rpc.sepolia.org";
 
 export default function WithdrawDepositCard() {
   const [activeAction, setActiveAction] = useState<"deposit" | "withdraw">(
     "deposit"
   );
   const [amount, setAmount] = useState("");
+  const [usdcBalance, setUsdcBalance] = useState("0");
 
   const { login } = useLogin();
   const { wallets } = useWallets();
   const { authenticated } = usePrivy();
 
-  // Connected = user has authenticated **and** at least one wallet has an address.
-  const isWalletConnected =
-    authenticated && (wallets?.some((w) => !!w.address) ?? false);
+  const walletAddr: string | undefined = wallets?.find((w) => !!w.address)
+    ?.address as string | undefined;
 
-  console.log("isWalletConnected:", isWalletConnected);
-  console.log("wallets:", wallets);
-  console.log("authenticated:", authenticated);
-  console.log("login:", login);
+  const isWalletConnected = authenticated && !!walletAddr;
+
+  useEffect(() => {
+    if (!isWalletConnected) {
+      setUsdcBalance("0");
+      return;
+    }
+
+    const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC);
+    const usdc = new ethers.Contract(USDC_ADDRESS, ERC20_ABI, provider);
+
+    (async () => {
+      try {
+        const [rawBal, dec] = await Promise.all([
+          usdc.balanceOf(walletAddr),
+          usdc.decimals(),
+        ]);
+        setUsdcBalance(ethers.formatUnits(rawBal, dec));
+      } catch (err) {
+        console.error("Failed to fetch USDC balance", err);
+      }
+    })();
+  }, [isWalletConnected, walletAddr]);
 
   const primaryLabel = isWalletConnected
     ? activeAction === "deposit"
@@ -44,36 +71,36 @@ export default function WithdrawDepositCard() {
     <div className="max-w-sm flex-shrink-0">
       <Card className="bg-white/5 border-white/10 rounded-2xl p-6 shadow-lg space-y-6">
         <div className="flex bg-white/5 rounded-2xl p-1">
-          <button
-            onClick={() => setActiveAction("deposit")}
-            className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ${
-              activeAction === "deposit"
-                ? "bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] text-white"
-                : "text-white/70 hover:text-white"
-            }`}
-            aria-label="Switch to deposit mode"
-            type="button"
-          >
-            Deposit
-          </button>
-          <button
-            onClick={() => setActiveAction("withdraw")}
-            className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ${
-              activeAction === "withdraw"
-                ? "bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] text-white"
-                : "text-white/70 hover:text-white"
-            }`}
-            aria-label="Switch to withdraw mode"
-            type="button"
-          >
-            Withdraw
-          </button>
+          {(["deposit", "withdraw"] as const).map((action) => (
+            <button
+              key={action}
+              onClick={() => setActiveAction(action)}
+              className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ${
+                activeAction === action
+                  ? "bg-gradient-to-r from-[#2962FF] to-[#5C6BFF] text-white"
+                  : "text-white/70 hover:text-white"
+              }`}
+              aria-label={`Switch to ${action} mode`}
+              type="button"
+            >
+              {action.charAt(0).toUpperCase() + action.slice(1)}
+            </button>
+          ))}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="amount" className="text-sm font-medium text-white/50">
-            Amount
-          </Label>
+          <div className="flex items-center justify-between w-full">
+            <Label
+              htmlFor="amount"
+              className="text-sm font-medium text-white/50"
+            >
+              Amount
+            </Label>
+            <span className="rounded bg-white/10 px-2 py-1 text-xs text-white/80">
+              Max: {usdcBalance} USDC
+            </span>
+          </div>
+
           <div className="relative">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
               <DollarSign className="w-4 h-4 text-blue-400" />
@@ -97,7 +124,7 @@ export default function WithdrawDepositCard() {
           <div className="flex items-center gap-1">
             <DollarSign className="w-3 h-3 text-blue-400" />
             <span role="status" className="text-white">
-              0 → 0
+              {usdcBalance} → {usdcBalance}
             </span>
           </div>
         </div>
