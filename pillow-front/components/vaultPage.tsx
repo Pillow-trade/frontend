@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import WithdrawDepositCard from "./withdrawDepositForm";
 import WalletButton from "./walletButton";
+import { useContract } from "@/context/contractContext";
 
 export default function PillowPage() {
   const { login } = useLogin({});

@@ -33,6 +33,8 @@ type ContractAction =
 interface ContractContextType {
   state: ContractState;
   dispatch: React.Dispatch<ContractAction>;
+  publicClient: PublicClient | null;
+  walletClient: WalletClient | null;
   // Add your custom methods here
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -140,6 +142,8 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({
 
   const contextValue: ContractContextType = {
     state,
+    publicClient,
+    walletClient,
     dispatch,
     setLoading,
     setError,
